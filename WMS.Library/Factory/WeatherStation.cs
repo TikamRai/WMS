@@ -1,22 +1,29 @@
-using WMS.Library.Factory;
+using WMS.Library.Interfaces;
+using WMS.Library.Observers;
 
-namespace WMS.Library.Factory
+namespace WMS.Library.Factory;
+
+public class WeatherStation
 {
-    public class WeatherStation
+    private WeatherData weatherData;
+
+    public WeatherStation(WeatherData weatherData)
     {
-        public IDsiplay CreateDisplay(string typeOfDisplay)
+        this.weatherData = weatherData;
+    }
+
+    public IDisplay CreateDisplay(string typeOfDisplay)
+    {
+        switch (typeOfDisplay)
         {
-            switch (typeOfDisplay)
-            {
-                case "CurrentConditions":
-                    return new CurrentConditionsDisplay();
-                case "Statistics":
-                    return new StaticsDsiplay();
-                case "Forecast":
-                    return new ForecastDisplay();
-                default:
-                    throw new ArguementException("Type of display you provided is not found or invlaid!", nameof(typeOfDisplay));
-            }
+            case "CurrentConditions":
+                return new CurrentConditionsDisplay(weatherData);
+            case "Statistics":
+                return new StatisticsDisplay(weatherData);
+            case "Forecast":
+                return new ForecastDisplay(weatherData);
+            default:
+                throw new ArgumentException("Type of display you provided is not found or invalid!", nameof(typeOfDisplay));
         }
     }
 }
